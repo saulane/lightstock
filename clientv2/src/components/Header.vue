@@ -26,8 +26,13 @@ export default {
             changeCurrentStock: (tck) => store.dispatch('changeCurrentStock', tck),
         };
     },
+    data(){
+        return{
+            ticker: 'MSFT'
+        }
+    },
     created(){
-        this.changeCurrentStock('msft');
+        this.changeCurrentStock(this.ticker);
     }
 }
 </script>

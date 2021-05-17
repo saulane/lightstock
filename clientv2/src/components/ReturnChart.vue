@@ -148,3 +148,17 @@ export default ({
     },
 })
 </script>
+
+<style lang="scss" scoped>
+.stats-charts-container{
+    
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    border: 0;
+
+    *{
+        margin: 0 10px;
+    }
+}
+</style>

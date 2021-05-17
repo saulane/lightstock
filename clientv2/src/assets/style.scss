@@ -158,14 +158,13 @@ tbody td:hover{
     flex-flow: row wrap;
     align-items: flex-start;
     justify-content: center;
+
+}
+
+table{
+    font-size: 1.3em;
 }
 
 .tables table{
     margin: 10px;
-}
-
-.stats-charts-container{
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
 }

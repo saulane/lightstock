@@ -1,6 +1,6 @@
 <template>
     <div class="tables">
-        <table>
+        <table class="stock-table">
             <thead >
                 <th colspan="6">{{ stockInfo["shortName"] }}</th>
                 <tr>
@@ -67,7 +67,5 @@ export default({
 </script>
 
 <style lang="scss" scoped>
-.tables{
-    font-weight: 5em;
-}
+
 </style>

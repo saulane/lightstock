@@ -17,9 +17,11 @@ class Stock:
 
         self.earnings = self.ticker.quarterly_earnings.to_dict()
         self.balance_sheet = self.ticker.balance_sheet.to_dict()
+        print(self.balance_sheet)
 
         self.financials = {
-            "earnings": self.earnings
+            "earnings": self.earnings,
+            # "balance_sheet": self.balance_sheet
         }
 
         self.balance_sheet = self.ticker.balance_sheet

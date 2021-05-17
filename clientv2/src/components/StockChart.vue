@@ -9,7 +9,7 @@
         ref="stockChart"
         @updated="onUpdate"
         class="stockChart"
-        style="max-width:1000px;width:95vw;"/>
+        style="max-width:1300px;width:95vw;"/>
 
     </div>
 </template>
