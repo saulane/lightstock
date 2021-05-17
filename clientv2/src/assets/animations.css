@@ -1,0 +1,31 @@
+.point-anim{
+    display: inline-block;
+    animation: loading 1.5s cubic-bezier(.42,0,.58,1) infinite;
+}
+
+@keyframes loading{
+    0%{
+      transform: translateY(0px);
+      color: white;
+    }
+    50%{
+      transform: translateY(-10px);
+      color: #01161E;
+    }
+    100%{
+      transform: translateY(0px);
+      color: white;
+    }
+  }
+
+.point-1{
+    animation-delay: 0.1s;
+}
+
+.point-2{
+    animation-delay: 0.2s;
+}
+
+.point-3{
+    animation-delay: 0.3s;
+}
