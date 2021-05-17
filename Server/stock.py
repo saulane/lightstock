@@ -9,11 +9,18 @@ class Stock:
         self.ticker = yf.Ticker(tck)
 
         self.stock_info = self.ticker.info
-        self.hist = self.ticker.history(period="2y", interval=tf)[['Open', 'High', 'Low', 'Close', 'Volume']].round(2)
-        self.hist["lastClose"] = self.hist['Close'].shift(1)
+        self.df = self.ticker.history(period="2y", interval=tf)[['Open', 'High', 'Low', 'Close', 'Volume']].round(2)
+        self.df["lastClose"] = self.df['Close'].shift(1)
 
         #self.financials = self.ticker.financials.rename(columns=lambda x: datetime.datetime.strftime(x, '%Y-%m-%d')).dropna()
         #self.financials = self.financials.to_dict()
+
+        self.earnings = self.ticker.quarterly_earnings.to_dict()
+        self.balance_sheet = self.ticker.balance_sheet.to_dict()
+
+        self.financials = {
+            "earnings": self.earnings
+        }
 
         self.balance_sheet = self.ticker.balance_sheet
 
@@ -22,37 +29,37 @@ class Stock:
         self.return_statistics = self.return_stats()
         self.gap_statistics = self.gap_stats()
 
-        self.hist = self.hist.iloc[-200:].round(4)
+        self.df = self.df.iloc[-200:].round(4)
 
-        self.hist['ts'] = self.hist.index.values.astype(np.int64) // 10 ** 9 * 1000
-        self.data_json_friendly = self.hist.reset_index().to_dict(orient="records")
+        self.df['ts'] = self.df.index.values.astype(np.int64) // 10 ** 9 * 1000
+        self.data_json_friendly = self.df.reset_index().to_dict(orient="records")
     
 
     def pivot_calcul(self):
-        self.hist['pp'] = (self.hist['High'].shift(1)+self.hist['Low'].shift(1)+self.hist['Close'].shift(1))/3
-        self.hist['s1'] = 2*self.hist['pp'] - self.hist['High']
-        self.hist['s2'] = self.hist['pp'] - (self.hist['High']-self.hist['Low'])
-        self.hist['r1'] = 2*self.hist['pp'] - self.hist['Low']
-        self.hist['r2'] = self.hist['pp'] + (self.hist['High'] - self.hist['Low'])
+        self.df['pp'] = (self.df['High'].shift(1)+self.df['Low'].shift(1)+self.df['Close'].shift(1))/3
+        self.df['s1'] = 2*self.df['pp'] - self.df['High']
+        self.df['s2'] = self.df['pp'] - (self.df['High']-self.df['Low'])
+        self.df['r1'] = 2*self.df['pp'] - self.df['Low']
+        self.df['r2'] = self.df['pp'] + (self.df['High'] - self.df['Low'])
 
 
     def emas_calcul(self):
         ema_tf = [9,12,20,50,100,200]
 
         for i in ema_tf:
-            self.hist['ema' + str(i)] = self.hist['Close'].ewm(span=i).mean().round(2)
+            self.df['ema' + str(i)] = self.df['Close'].ewm(span=i).mean().round(2)
 
 
     def return_stats(self):
-        self.hist["return"] = self.hist["Close"]/self.hist["Open"]-1
-        self.hist['return'] = self.hist["return"].round(6)
+        self.df["return"] = self.df["Close"]/self.df["Open"]-1
+        self.df['return'] = self.df["return"].round(6)
 
-        r_mean = self.hist["return"].mean()
-        r_median = self.hist["return"].median()
-        r_25 = self.hist["return"].quantile(0.25)
-        r_75 = self.hist["return"].quantile(0.75)
-        r_max = self.hist["return"].max()
-        r_min = self.hist["return"].min()
+        r_mean = self.df["return"].mean()
+        r_median = self.df["return"].median()
+        r_25 = self.df["return"].quantile(0.25)
+        r_75 = self.df["return"].quantile(0.75)
+        r_max = self.df["return"].max()
+        r_min = self.df["return"].min()
 
         r_dict = {"Mean": r_mean, "Median": r_median,"25%": r_25,"75%": r_75, "Min": r_min, "Max": r_max}
 
@@ -60,12 +67,12 @@ class Stock:
 
 
     def gap_stats(self):
-        gap = self.hist.loc[abs(self.hist["Open"]/self.hist["lastClose"]-1)>0.01]
+        gap = self.df.loc[abs(self.df["Open"]/self.df["lastClose"]-1)>0.01]
         up_gap = gap.loc[gap['Open']>gap['lastClose'].shift(-1)]
         down_gap = gap.loc[gap['Open']<gap['lastClose'].shift(-1)]
 
-        up_gap_count_percent = len(up_gap)/len(self.hist) if len(self.hist)>0 else 0
-        down_gap_count_percent = len(down_gap)/len(self.hist) if len(self.hist)>0 else 0
+        up_gap_count_percent = len(up_gap)/len(self.df) if len(self.df)>0 else 0
+        down_gap_count_percent = len(down_gap)/len(self.df) if len(self.df)>0 else 0
 
         up_gap_filled = up_gap.loc[up_gap['Low'] <= up_gap['lastClose']]
         down_gap_filled = down_gap.loc[down_gap['High'] >= down_gap['lastClose']]
@@ -94,9 +101,19 @@ class Stock:
 
         return data_dict
 
+    def api_result(self):
+        res_dict = {
+            "info":self.stock_info, 
+            "returnStatistics":self.return_statistics, 
+            "prices":self.data_json_friendly, 
+            "gapStatistics":self.gap_statistics, 
+            "financials":self.financials
+        }
+        return res_dict
+
 
     def __repr__(self):
-        return repr(self.hist)
+        return repr(self.df)
 
 
 # x = Stock('btc-eur', '1d')

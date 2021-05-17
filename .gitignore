@@ -10,3 +10,5 @@ env
 clientv2/node_modules
 
 Server/__pycache__/
+.vscode/*
+.vscode/settings.json
