@@ -70,7 +70,7 @@ export default new Vuex.Store({
 	},
 	actions: {
 		async getDataFromApi(context, data) {
-			const path = "http://127.0.0.1:5000/stocks/";
+			const path = "https://saulane.pythonanywhere.com/stocks/";
 			context.state.isLoading = true;
 			console.log(context.state.cachedData)
 
