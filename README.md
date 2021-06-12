@@ -8,7 +8,8 @@ Les données sont récupérées depuis la library Yfinance en python </br>
 # Utilisation
 
 Visitez la démo en cliquant sur le lien ci-dessous: <br>
-https://lightstock.herokuapp.com/
+https://lightstock.herokuapp.com/ <br>
 <br>
 Une fois sur le site, rentrez le ticker de votre actif dans la barre de recherche. <br>
-Le ticker doit être le même que celui présent sur Yahoo Finance, par exemple les actions de la bourse parisienne finissent par .PA (ex: Claranova = CLA.PA)
+Le ticker doit être le même que celui présent sur Yahoo Finance. <br> 
+Par exemple les actions de la bourse parisienne finissent par .PA (ex: Claranova = CLA.PA)
